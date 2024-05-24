@@ -1,5 +1,6 @@
 package com.madadipouya.quarkus.example.service.impl;
 
+import com.madadipouya.quarkus.example.dtos.TransferRequestDto;
 import com.madadipouya.quarkus.example.entities.Account;
 import com.madadipouya.quarkus.example.exception.ResourceNotFoundException;
 import com.madadipouya.quarkus.example.exception.ValidationException;
@@ -65,5 +66,24 @@ public class DefaultAccountService implements AccountService {
         existingAccount.setBalanceInDkk(existingAccount.getBalanceInDkk() + amount);
         accountRepository.persist(existingAccount);
         return existingAccount;
+    }
+
+    @Transactional
+    @Override
+    public void transferMoney(TransferRequestDto transferRequest) throws ResourceNotFoundException, ValidationException {
+        Account sourceAccount = getAccountById(transferRequest.sourceAccountId);
+        Account destinationAccount = getAccountById(transferRequest.destinationAccountId);
+
+        if (transferRequest.amount < 0) {
+            throw new ValidationException("Cannot transfer negative amount of money: " + transferRequest.amount);
+        }
+
+        if (sourceAccount.getBalanceInDkk() < transferRequest.amount) {
+            throw new ValidationException("Insufficient funds on source account. It contains: " + sourceAccount.getBalanceInDkk() + ". Tried to transfer: " + transferRequest.amount);
+        }
+        sourceAccount.setBalanceInDkk(sourceAccount.getBalanceInDkk() - transferRequest.amount);
+        destinationAccount.setBalanceInDkk(destinationAccount.getBalanceInDkk() + transferRequest.amount);
+        accountRepository.persist(sourceAccount);
+        accountRepository.persist(destinationAccount);
     }
 }

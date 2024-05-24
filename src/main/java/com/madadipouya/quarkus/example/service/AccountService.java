@@ -1,5 +1,6 @@
 package com.madadipouya.quarkus.example.service;
 
+import com.madadipouya.quarkus.example.dtos.TransferRequestDto;
 import com.madadipouya.quarkus.example.entities.Account;
 import com.madadipouya.quarkus.example.exception.ResourceNotFoundException;
 import com.madadipouya.quarkus.example.exception.ValidationException;
@@ -19,4 +20,6 @@ public interface AccountService {
     void deleteAccount(long id) throws ResourceNotFoundException;
 
     Account deposit(long id, int amount) throws ResourceNotFoundException, ValidationException;
+
+    void transferMoney(TransferRequestDto transferRequestDto) throws ResourceNotFoundException, ValidationException;
 }

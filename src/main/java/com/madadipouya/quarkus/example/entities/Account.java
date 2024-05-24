@@ -14,7 +14,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "accounts") // TODO: replace
+@Table(name = "accounts")
 @UserDefinition
 @Getter
 @Setter

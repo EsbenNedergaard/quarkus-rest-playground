@@ -1,6 +1,7 @@
 package com.madadipouya.quarkus.example;
 
-import com.madadipouya.quarkus.example.controller.AccountController;
+import com.madadipouya.quarkus.example.dtos.AccountDto;
+import com.madadipouya.quarkus.example.dtos.TransferRequestDto;
 import com.madadipouya.quarkus.example.entities.Account;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
@@ -39,7 +40,7 @@ public class AccountControllerTest {
         String firstName = "firstName";
         String lastName = "lastName";
 
-        AccountController.AccountDto dto = new AccountController.AccountDto(userName, password, role, firstName, lastName);
+        AccountDto dto = new AccountDto(userName, password, role, firstName, lastName);
         Response response = given()
                 .auth().basic(adminUserName, adminPassword)
                 .body(dto)
@@ -100,7 +101,7 @@ public class AccountControllerTest {
 
     @Test
     public void testUpdateAccountEndpoint() {
-        AccountController.AccountDto updateDto = new AccountController.AccountDto("cannotUpdateUserName", "cannotUpdatePassword", "cannotUpdateRoles", "updatedFirstName", "updatedLastName");
+        AccountDto updateDto = new AccountDto("cannotUpdateUserName", "cannotUpdatePassword", "cannotUpdateRoles", "updatedFirstName", "updatedLastName");
         Response response = given()
                 .auth().basic(adminUserName, adminPassword)
                 .body(updateDto)
@@ -126,7 +127,7 @@ public class AccountControllerTest {
     @Test
     public void testUpdateAccountEndpoint_NotFound() {
         int unknownId = 10000000;
-        AccountController.AccountDto updateDto = new AccountController.AccountDto("userName", "password", "ADMIN", "updatedFirstName", "updatedLastName");
+        AccountDto updateDto = new AccountDto("userName", "password", "ADMIN", "updatedFirstName", "updatedLastName");
         given()
                 .auth().basic(adminUserName, adminPassword)
                 .body(updateDto)
@@ -186,9 +187,46 @@ public class AccountControllerTest {
                 .statusCode(HttpStatus.SC_BAD_REQUEST);
     }
 
+    @Test
+    public void testTransferMoney() {
+        Account sourceAccount = testAccount;
+        Account destinationAccount = createAccount("user2", "password2", "USER");
+
+        // Inserting money on source account
+        int originalAmountOnSource = 50;
+        given()
+                .auth().basic(adminUserName, adminPassword)
+                .contentType(ContentType.JSON)
+                .body(originalAmountOnSource)
+                .when()
+                .post("/v1/accounts/{id}/deposit", sourceAccount.getId())
+                .then()
+                .statusCode(HttpStatus.SC_OK);
+
+        // Then transferring them
+        int transferAmount = 40;
+        TransferRequestDto transferRequestDto = new TransferRequestDto(sourceAccount.getId(), destinationAccount.getId(), transferAmount);
+        given()
+                .auth().basic(adminUserName, adminPassword)
+                .contentType(ContentType.JSON)
+                .body(transferRequestDto)
+                .when()
+                .post("/v1/accounts/transfer")
+                .then()
+                .statusCode(HttpStatus.SC_OK);
+
+        // Afterward the source account has 10 DDK left
+        Account fetchedSourceAccountAfterTransfer = fetchAccount(sourceAccount.getId());
+        assertThat(fetchedSourceAccountAfterTransfer.getBalanceInDkk(), equalTo(10));
+
+        // And destination has 40
+        Account fetchedDestinationAccountAfterTransfer = fetchAccount(destinationAccount.getId());
+        assertThat(fetchedDestinationAccountAfterTransfer.getBalanceInDkk(), equalTo(40));
+    }
+
 
     private static Account createAccount(String username, String password, String role) {
-        AccountController.AccountDto dto = new AccountController.AccountDto(username, password, role, "firstName", "lastName");
+        AccountDto dto = new AccountDto(username, password, role, "firstName", "lastName");
         return given()
                 .auth().basic(adminUserName, adminPassword)
                 .body(dto)
@@ -200,4 +238,15 @@ public class AccountControllerTest {
                 .extract()
                 .as(Account.class);
     }
+
+    private static Account fetchAccount(Long accountId) {
+        return given()
+                .auth().basic(adminUserName, adminPassword)
+                .when().get("/v1/accounts/{id}", accountId)
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .extract()
+                .response().as(Account.class);
+    }
+
 }
