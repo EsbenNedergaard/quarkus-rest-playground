@@ -95,3 +95,7 @@ projects that I have worked on.
 # Balance property is not part of DTO
 
 Reason for this is that balance should only be manipulated through transfers & deposits.
+
+# Using POST instead of PUT for the deposit/transfer methods
+
+We use POST instead of PUT as this is only a partial update and not a FULL-UPDATE of the resource.
