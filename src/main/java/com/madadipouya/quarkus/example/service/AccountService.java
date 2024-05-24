@@ -1,7 +1,7 @@
 package com.madadipouya.quarkus.example.service;
 
+import com.madadipouya.quarkus.example.entities.Account;
 import com.madadipouya.quarkus.example.exception.ResourceNotFoundException;
-import com.madadipouya.quarkus.example.models.Account;
 
 import java.util.List;
 

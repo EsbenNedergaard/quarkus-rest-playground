@@ -1,4 +1,4 @@
-package com.madadipouya.quarkus.example.models;
+package com.madadipouya.quarkus.example.entities;
 
 import io.quarkus.security.jpa.Password;
 import io.quarkus.security.jpa.Roles;
