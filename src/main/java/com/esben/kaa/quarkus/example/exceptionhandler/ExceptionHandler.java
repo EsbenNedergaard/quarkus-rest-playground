@@ -5,8 +5,10 @@ import com.esben.kaa.quarkus.example.exception.ValidationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
+import lombok.extern.slf4j.Slf4j;
 
 @Provider
+@Slf4j
 public class ExceptionHandler implements ExceptionMapper<Exception> {
 
     @Override
@@ -21,6 +23,7 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
                     .entity(new ErrorResponseBody(exception.getMessage()))
                     .build();
         }
+        log.error(exception.getMessage(), exception);
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                 .entity(new ErrorResponseBody("Something unexpected happened. Try again"))
                 .build();
