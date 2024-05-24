@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 
 @QuarkusTest
 public class AccountControllerTest {
@@ -98,15 +99,27 @@ public class AccountControllerTest {
 
     @Test
     public void testUpdateAccountEndpoint() {
-        AccountController.AccountDto updateDto = new AccountController.AccountDto("userName", "password", "ADMIN", "updatedFirstName", "updatedLastName");
-        given()
+        AccountController.AccountDto updateDto = new AccountController.AccountDto("cannotUpdateUserName", "cannotUpdatePassword", "cannotUpdateRoles", "updatedFirstName", "updatedLastName");
+        Response response = given()
                 .auth().basic(adminUserName, adminPassword)
                 .body(updateDto)
                 .contentType(ContentType.JSON)
                 .when()
                 .put("/v1/accounts/{id}", testAccount.getId())
                 .then()
-                .statusCode(200);
+                .statusCode(200)
+                .extract()
+                .response();
+
+        Account account = response.as(Account.class);
+
+        assertThat(account.getFirstName(), equalTo(updateDto.getFirstName()));
+        assertThat(account.getLastName(), equalTo(updateDto.getLastName()));
+
+        // Some parts of the DTO will be ignored during UPDATE
+        assertThat(account.getUsername(), not(equalTo(updateDto.getUsername())));
+        assertThat(account.getPassword(), not(equalTo(updateDto.getPassword())));
+        assertThat(account.getRole(), not(equalTo(updateDto.getRole())));
     }
 
     @Test
