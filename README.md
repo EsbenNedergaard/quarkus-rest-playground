@@ -2,7 +2,7 @@
 
 This project uses Quarkus to build REST APIs.
 
-Note I tested this project using Java 11 (so remember to change your JAVA_HOME to use java 11)
+Note I tested this project using Java 17 (so remember to change your JAVA_HOME to use java 17)
 
 ## Running the application in `dev` mode
 
