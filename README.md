@@ -57,24 +57,24 @@ $ ./mvnw quarkus:dev -Ddebug
 
 This activates debug on port `5005`. Then use your IDE to connect to `localhost:5005` to debug the application.
 
-## Some relevant Design Decisions
+# Some relevant Design Decisions
 
-# Architecture: Controller - Service - Repository
+### Architecture: Controller - Service - Repository
 
 The Architecture I went with was a simple Controller - Service - Repository (CSR) pattern. Where:
 Controller: is responsible for handling incoming requests.
 Service: is responsible for encapsulating the business logic.
 Repository: is responsible for data access logic.
 
-# Balance property is not part of DTO
+### Balance property is not part of DTO
 
 Reason for this is that balance should only be manipulated through transfers & deposits.
 
-# Using POST instead of PUT for the deposit/transfer methods
+### Using POST instead of PUT for the deposit/transfer methods
 
 We use POST instead of PUT as this is only a partial update and not a FULL-UPDATE of the resource.
 
-# Mockito should be used for better/cleaner testing
+### Mockito should be used for better/cleaner testing
 
 Decided not to bother using mocking framework such as Mockito due to it taking some time to get up and running.
 So creating test data through calls to REST ATM which is not ideal.
