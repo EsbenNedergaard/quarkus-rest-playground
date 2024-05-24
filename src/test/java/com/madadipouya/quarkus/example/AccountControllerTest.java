@@ -46,7 +46,8 @@ public class AccountControllerTest {
                 .post("/v1/accounts")
                 .then()
                 .statusCode(201)
-                .extract().response();
+                .extract()
+                .response();
 
         Account account = response.as(Account.class);
         assertThat(account.getUsername(), equalTo(userName));
@@ -68,11 +69,20 @@ public class AccountControllerTest {
 
     @Test
     public void testGetAccountByIdEndpoint() {
-        given()
+        Response response = given()
                 .auth().basic(adminUserName, adminPassword)
                 .when().get("/v1/accounts/{id}", testAccount.getId())
                 .then()
-                .statusCode(200);
+                .statusCode(200)
+                .extract()
+                .response();
+
+        Account account = response.as(Account.class);
+        assertThat(account.getUsername(), equalTo(testAccount.getUsername()));
+        assertThat(account.getRole(), equalTo(testAccount.getRole()));
+        assertThat(account.getFirstName(), equalTo(testAccount.getFirstName()));
+        assertThat(account.getLastName(), equalTo(testAccount.getLastName()));
+        assertThat(account.getBalanceInDkk(), equalTo(testAccount.getBalanceInDkk()));
     }
 
     @Test
