@@ -12,14 +12,14 @@ First start the docker:
 $ cd docker && docker-compose up -d
 ```
 
-Then create tables with some predefined data,
+Then create tables (& some predefined data in them)
 
 ```bash
 $ ./db_initializer.sh
 ```
 
 Finally, you can run your application in dev mode that enables live coding by going back out into the root folder and
-then calling:
+then calling (if this does not work check your JAVA_HOME points to a java 17 jdk)
 
 ```bash
 $ ./mvnw quarkus:dev
