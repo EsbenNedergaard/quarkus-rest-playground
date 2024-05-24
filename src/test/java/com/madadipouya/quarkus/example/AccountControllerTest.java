@@ -224,6 +224,41 @@ public class AccountControllerTest {
         assertThat(fetchedDestinationAccountAfterTransfer.getBalanceInDkk(), equalTo(40));
     }
 
+    @Test
+    public void testTransferMoney_CannotTransferNegativeAmount() {
+        Account sourceAccount = testAccount;
+        Account destinationAccount = createAccount("user2", "password2", "USER");
+
+        int transferAmount = -1;
+        TransferRequestDto transferRequestDto = new TransferRequestDto(sourceAccount.getId(), destinationAccount.getId(), transferAmount);
+        given()
+                .auth().basic(adminUserName, adminPassword)
+                .contentType(ContentType.JSON)
+                .body(transferRequestDto)
+                .when()
+                .post("/v1/accounts/transfer")
+                .then()
+                .statusCode(HttpStatus.SC_BAD_REQUEST);
+    }
+
+    @Test
+    public void testTransferMoney_CannotTransferMoreThanIsOnSource() {
+        Account sourceAccount = testAccount;
+        Account destinationAccount = createAccount("user2", "password2", "USER");
+
+        // Source account as 0 balance here.
+        int transferAmount = 10;
+        TransferRequestDto transferRequestDto = new TransferRequestDto(sourceAccount.getId(), destinationAccount.getId(), transferAmount);
+        given()
+                .auth().basic(adminUserName, adminPassword)
+                .contentType(ContentType.JSON)
+                .body(transferRequestDto)
+                .when()
+                .post("/v1/accounts/transfer")
+                .then()
+                .statusCode(HttpStatus.SC_BAD_REQUEST);
+    }
+
 
     private static Account createAccount(String username, String password, String role) {
         AccountDto dto = new AccountDto(username, password, role, "firstName", "lastName");
