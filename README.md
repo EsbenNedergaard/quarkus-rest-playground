@@ -1,4 +1,4 @@
-# Quarkus RESt API example
+# Quarkus REST API example
 
 This project uses Quarkus to build REST APIs.
 
