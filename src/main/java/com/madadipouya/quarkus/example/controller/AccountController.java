@@ -123,7 +123,7 @@ public class AccountController {
     @POST
     @RolesAllowed({"USER", "ADMIN"})
     @Path("/transfer")
-    @Operation(summary = "Deposits money on an account", description = "Deposits the provided amount on the given account")
+    @Operation(summary = "Transfers money", description = "Transfer money from source to destination")
     @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "Success"),
             @APIResponse(responseCode = "404", description = "Account not found",
