@@ -1,6 +1,6 @@
-package com.madadipouya.quarkus.example.dtos;
+package com.esben.kaa.quarkus.example.dtos;
 
-import com.madadipouya.quarkus.example.entities.Account;
+import com.esben.kaa.quarkus.example.entities.Account;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

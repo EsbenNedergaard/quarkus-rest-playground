@@ -1,8 +1,8 @@
-package com.madadipouya.quarkus.example;
+package com.esben.kaa.quarkus.example;
 
-import com.madadipouya.quarkus.example.dtos.AccountDto;
-import com.madadipouya.quarkus.example.dtos.TransferRequestDto;
-import com.madadipouya.quarkus.example.entities.Account;
+import com.esben.kaa.quarkus.example.dtos.AccountDto;
+import com.esben.kaa.quarkus.example.dtos.TransferRequestDto;
+import com.esben.kaa.quarkus.example.entities.Account;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;

@@ -1,7 +1,7 @@
-package com.madadipouya.quarkus.example.exceptionhandler;
+package com.esben.kaa.quarkus.example.exceptionhandler;
 
-import com.madadipouya.quarkus.example.exception.ResourceNotFoundException;
-import com.madadipouya.quarkus.example.exception.ValidationException;
+import com.esben.kaa.quarkus.example.exception.ResourceNotFoundException;
+import com.esben.kaa.quarkus.example.exception.ValidationException;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;

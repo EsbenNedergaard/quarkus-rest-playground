@@ -1,4 +1,4 @@
-package com.madadipouya.quarkus.example.dtos;
+package com.esben.kaa.quarkus.example.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

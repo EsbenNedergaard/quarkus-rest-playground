@@ -1,4 +1,4 @@
-package com.madadipouya.quarkus.example.exception;
+package com.esben.kaa.quarkus.example.exception;
 
 public class ValidationException extends Exception {
 
