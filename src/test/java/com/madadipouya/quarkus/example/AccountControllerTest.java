@@ -4,10 +4,13 @@ import com.madadipouya.quarkus.example.controller.AccountController;
 import com.madadipouya.quarkus.example.entities.Account;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 @QuarkusTest
 public class AccountControllerTest {
@@ -28,15 +31,30 @@ public class AccountControllerTest {
 
     @Test
     public void testCreateAccountEndpoint() {
-        AccountController.AccountDto dto = new AccountController.AccountDto("userName", "password", "ADMIN", "firstName", "lastName");
-        given()
+        String userName = "userName";
+        String password = "password";
+        String role = "USER";
+        String firstName = "firstName";
+        String lastName = "lastName";
+
+        AccountController.AccountDto dto = new AccountController.AccountDto(userName, password, role, firstName, lastName);
+        Response response = given()
                 .auth().basic(adminUserName, adminPassword)
                 .body(dto)
                 .contentType(ContentType.JSON)
                 .when()
                 .post("/v1/accounts")
                 .then()
-                .statusCode(200);
+                .statusCode(201)
+                .extract().response();
+
+        Account account = response.as(Account.class);
+        assertThat(account.getUsername(), equalTo(userName));
+        assertThat(account.getPassword(), equalTo(null));  // Password is hidden in response
+        assertThat(account.getRole(), equalTo(role));
+        assertThat(account.getFirstName(), equalTo(firstName));
+        assertThat(account.getLastName(), equalTo(lastName));
+        assertThat(account.getBalanceInDkk(), equalTo(0)); // Starting balance is 0
     }
 
     @Test
@@ -125,7 +143,7 @@ public class AccountControllerTest {
                 .when()
                 .post("/v1/accounts")
                 .then()
-                .statusCode(200)
+                .statusCode(201)
                 .extract()
                 .as(Account.class);
     }

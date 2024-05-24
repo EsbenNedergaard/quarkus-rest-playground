@@ -2,6 +2,7 @@ package com.madadipouya.quarkus.example.service.impl;
 
 import com.madadipouya.quarkus.example.entities.Account;
 import com.madadipouya.quarkus.example.exception.ResourceNotFoundException;
+import com.madadipouya.quarkus.example.exception.ValidationException;
 import com.madadipouya.quarkus.example.repository.AccountRepository;
 import com.madadipouya.quarkus.example.service.AccountService;
 
@@ -52,5 +53,17 @@ public class DefaultAccountService implements AccountService {
     @Override
     public void deleteAccount(long id) throws ResourceNotFoundException {
         accountRepository.delete(getAccountById(id));
+    }
+
+    @Transactional
+    @Override
+    public Account deposit(long id, int amount) throws ResourceNotFoundException, ValidationException {
+        if (amount < 0) {
+            throw new ValidationException("Cannot deposit negative amount of money: " + amount);
+        }
+        Account existingAccount = getAccountById(id);
+        existingAccount.setBalanceInDkk(existingAccount.getBalanceInDkk() + amount);
+        accountRepository.persist(existingAccount);
+        return existingAccount;
     }
 }

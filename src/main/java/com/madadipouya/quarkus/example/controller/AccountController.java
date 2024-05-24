@@ -2,6 +2,7 @@ package com.madadipouya.quarkus.example.controller;
 
 import com.madadipouya.quarkus.example.entities.Account;
 import com.madadipouya.quarkus.example.exception.ResourceNotFoundException;
+import com.madadipouya.quarkus.example.exception.ValidationException;
 import com.madadipouya.quarkus.example.exceptionhandler.ExceptionHandler;
 import com.madadipouya.quarkus.example.service.AccountService;
 import lombok.AllArgsConstructor;
@@ -70,10 +71,11 @@ public class AccountController {
     @POST
     @RolesAllowed({"ADMIN"})
     @Operation(summary = "Creates an account", description = "Creates an account and persists into database")
-    @APIResponses(value = @APIResponse(responseCode = "200", description = "Success",
+    @APIResponses(value = @APIResponse(responseCode = "201", description = "Created",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))))
-    public Account createAccount(@Valid AccountController.AccountDto accountDto) {
-        return accountService.createNewAccount(accountDto.toAccount());
+    public Response createAccount(@Valid AccountController.AccountDto accountDto) {
+        Account newAccount = accountService.createNewAccount(accountDto.toAccount());
+        return Response.status(Response.Status.CREATED).entity(newAccount).build();
     }
 
     @PUT
@@ -86,8 +88,9 @@ public class AccountController {
             @APIResponse(responseCode = "404", description = "Account not found",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionHandler.ErrorResponseBody.class)))
     })
-    public Account updateAccount(@PathParam("id") int id, @Valid AccountController.AccountDto accountDto) throws ResourceNotFoundException {
-        return accountService.updateAccount(id, accountDto.toAccount());
+    public Response updateAccount(@PathParam("id") int id, @Valid AccountController.AccountDto accountDto) throws ResourceNotFoundException {
+        Account updatedAccount = accountService.updateAccount(id, accountDto.toAccount());
+        return Response.ok(updatedAccount).build();
     }
 
     @DELETE
@@ -103,6 +106,23 @@ public class AccountController {
         accountService.deleteAccount(id);
         return Response.status(Response.Status.NO_CONTENT).build();
     }
+
+    @POST
+    @RolesAllowed({"USER", "ADMIN"})
+    @Path("/{id}/deposit")
+    @Operation(summary = "Deposits money on an account", description = "Deposits the provided amount on the given account")
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Success",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))),
+            @APIResponse(responseCode = "404", description = "Account not found",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionHandler.ErrorResponseBody.class))),
+            @APIResponse(responseCode = "400", description = "Bad request",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionHandler.ErrorResponseBody.class)))
+    })
+    public Response depositMoney(@PathParam("id") Long id, int amount) throws ResourceNotFoundException, ValidationException {
+        return Response.ok(accountService.deposit(id, amount)).build();
+    }
+
 
     @Schema(name = "AccountDTO", description = "Account representation to create")
     @Getter

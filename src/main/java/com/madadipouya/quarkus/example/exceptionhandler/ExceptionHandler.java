@@ -1,6 +1,7 @@
 package com.madadipouya.quarkus.example.exceptionhandler;
 
 import com.madadipouya.quarkus.example.exception.ResourceNotFoundException;
+import com.madadipouya.quarkus.example.exception.ValidationException;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -11,8 +12,13 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
 
     @Override
     public Response toResponse(Exception exception) {
-        if(exception instanceof ResourceNotFoundException) {
+        if (exception instanceof ResourceNotFoundException) {
             return Response.status(Response.Status.NOT_FOUND)
+                    .entity(new ErrorResponseBody(exception.getMessage()))
+                    .build();
+        }
+        if (exception instanceof ValidationException) {
+            return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new ErrorResponseBody(exception.getMessage()))
                     .build();
         }

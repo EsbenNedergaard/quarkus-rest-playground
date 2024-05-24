@@ -2,6 +2,7 @@ package com.madadipouya.quarkus.example.service;
 
 import com.madadipouya.quarkus.example.entities.Account;
 import com.madadipouya.quarkus.example.exception.ResourceNotFoundException;
+import com.madadipouya.quarkus.example.exception.ValidationException;
 
 import java.util.List;
 
@@ -16,4 +17,6 @@ public interface AccountService {
     Account createNewAccount(Account account);
 
     void deleteAccount(long id) throws ResourceNotFoundException;
+
+    Account deposit(long id, int amount) throws ResourceNotFoundException, ValidationException;
 }
