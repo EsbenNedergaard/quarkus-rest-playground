@@ -28,20 +28,23 @@ $ ./mvnw quarkus:dev
 
 The app runs on `localhost:8080`. You can interact with the APIs via Swagger http://localhost:8080/swagger-ui.html/
 
-Example user:
+Example account:
  - Username: leo
  - Password: 1234
 
 Alternatively you can use CURL as follows,
 
+TODO: UPDATE THESE WITH MY ENDPOINTs
+
+
 ```bash
 # get list of users (secured, accessible to users with 'ADMIN' or 'USER' role)
-$ curl --anyauth --user leo:1234 localhost:8080/v1/users/
+$ curl --anyauth --account leo:1234 localhost:8080/v1/users/
 
-# get a specific user (secured, accessible to users with 'ADMIN' or 'USER' role)
-$ curl --anyauth --user leo:1234 localhost:8080/v1/users/2
+# get a specific account (secured, accessible to users with 'ADMIN' or 'USER' role)
+$ curl --anyauth --account leo:1234 localhost:8080/v1/users/2
 
-# create a user (open)
+# create a account (open)
 $ curl --request POST 'localhost:8080/v1/users' --header 'Content-Type: application/json' \
 --data-raw '{
 	"firstName": "Tom",
@@ -49,16 +52,16 @@ $ curl --request POST 'localhost:8080/v1/users' --header 'Content-Type: applicat
 	"age": 57
 }'
 
-# edit a user (secured, accessible to users with 'ADMIN' role only)
-$ curl --anyauth --user admin:admin --request PUT 'localhost:8080/v1/users/1' --header 'Content-Type: application/json' \
+# edit a account (secured, accessible to users with 'ADMIN' role only)
+$ curl --anyauth --account admin:admin --request PUT 'localhost:8080/v1/users/1' --header 'Content-Type: application/json' \
 --data-raw '{
 	"firstName": "Leonardo",
 	"lastName": "DiCaprio",
 	"age": 46
 }'
 
-# delete a user (secured, accessible to users with 'ADMIN' role only)
-$ curl --anyauth --user admin:admin --request DELETE 'localhost:8080/v1/users/2'
+# delete a account (secured, accessible to users with 'ADMIN' role only)
+$ curl --anyauth --account admin:admin --request DELETE 'localhost:8080/v1/users/2'
 ```
 
 ## Debugging the application

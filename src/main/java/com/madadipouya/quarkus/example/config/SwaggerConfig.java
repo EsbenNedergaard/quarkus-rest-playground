@@ -9,16 +9,12 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import javax.ws.rs.core.Application;
 
 @OpenAPIDefinition(
-        tags = {
-                @Tag(name = "user", description = "User operations."),
-        },
         info = @Info(
-                title = "User API with Quarkus",
+                title = "Account API with Quarkus",
                 version = "0.0.1",
                 contact = @Contact(
-                        name = "Kasra Madadipouya",
-                        url = "http://geekyhacker.com/contact",
-                        email = "kasra@madadipouya.com"),
+                        name = "Esben Nedergaard",
+                        email = "esben.nedergaard@yahoo.dk"),
                 license = @License(
                         name = "MIT",
                         url = "https://opensource.org/licenses/MIT"))

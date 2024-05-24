@@ -1,4 +1,4 @@
-package com.madadipouya.quarkus.example.entity;
+package com.madadipouya.quarkus.example.models;
 
 import io.quarkus.elytron.security.common.BcryptUtil;
 import io.quarkus.security.jpa.Password;
@@ -14,9 +14,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users") // TODO: replace
 @UserDefinition
-public class User {
+public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

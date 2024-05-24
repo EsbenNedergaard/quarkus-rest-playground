@@ -1,6 +1,6 @@
 package com.madadipouya.quarkus.example.exceptionhandler;
 
-import com.madadipouya.quarkus.example.exception.UserNotFoundException;
+import com.madadipouya.quarkus.example.exception.ResourceNotFoundException;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -11,7 +11,7 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
 
     @Override
     public Response toResponse(Exception exception) {
-        if(exception instanceof UserNotFoundException) {
+        if(exception instanceof ResourceNotFoundException) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(new ErrorResponseBody(exception.getMessage()))
                     .build();
