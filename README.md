@@ -1,12 +1,8 @@
 # Quarkus RESt API example
 
-This project uses Quarkus to build REST APIs. 
+This project uses Quarkus to build REST APIs.
 
-For the tutorials check the below links,
-- [Building REST APIs with Quarkus](https://www.geekyhacker.com/2020/06/06/building-rest-apis-with-quarkus/)
-- [Use MySQL in Quarkus with Hibernate and Panache](https://www.geekyhacker.com/2020/06/09/use-mysql-in-quarkus-with-hibernate-and-panache/)
-- [How to add Swagger to Quarkus](https://www.geekyhacker.com/2020/06/12/how-to-add-swagger-to-quarkus/)
-- [Secure REST APIs in Quarkus using Basic Auth](https://www.geekyhacker.com/2020/06/17/secure-rest-apis-in-quarkus-using-basic-auth/)
+Note I tested this project using Java 11
 
 ## Running the application in `dev` mode
 
@@ -22,7 +18,7 @@ Then create tables with some predefined data,
 $ ./db_initializer.sh
 ```
 
-Finally, you can run your application in dev mode that enables live coding using:
+Finally, you can run your application in dev mode that enables live coding by going back out into the root folder and then calling:
 
 ```bash
 $ ./mvnw quarkus:dev
@@ -30,7 +26,11 @@ $ ./mvnw quarkus:dev
 
 ## Interacting with APIs
 
-The app runs on `localhost:8080`. You can interact with the APIs via Swagger `localhost:8080/swagger-ui`
+The app runs on `localhost:8080`. You can interact with the APIs via Swagger http://localhost:8080/swagger-ui.html/
+
+Example user:
+ - Username: leo
+ - Password: 1234
 
 Alternatively you can use CURL as follows,
 
@@ -70,3 +70,13 @@ $ ./mvnw quarkus:dev -Ddebug
 ```
 
 This activates debug on port `5005`. Then use your IDE to connect to `localhost:5005` to debug the application.
+
+
+## Some relevant Design Decisions
+
+# Used Quarkos Rest API example:
+Choose to find existing get started repo on github: https://github.com/kasramp/quarkus-rest-example. 
+However, this meant I had to go back to Java 11 to get it up & running.
+
+Could perhaps have spent a bit more time looking for example with newer versions 
+but choose this as it seemed the simplest to get up and running and had what I needed.
