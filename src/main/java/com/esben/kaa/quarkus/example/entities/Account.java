@@ -1,17 +1,16 @@
 package com.esben.kaa.quarkus.example.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.quarkus.security.jpa.Password;
 import io.quarkus.security.jpa.Roles;
 import io.quarkus.security.jpa.UserDefinition;
 import io.quarkus.security.jpa.Username;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.json.bind.annotation.JsonbTransient;
-import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "accounts")
@@ -30,7 +29,7 @@ public class Account {
 
     @Column(name = "password", nullable = false)
     @Password
-    @JsonbTransient
+    @JsonIgnore
     private String password;
 
     @Column(name = "role", nullable = false)

@@ -66,15 +66,6 @@ Controller: is responsible for handling incoming requests.
 Service: is responsible for encapsulating the business logic.
 Repository: is responsible for data access logic.
 
-# Used Quarkos Rest API example:
-
-Choose to find existing get started repo on github: https://github.com/kasramp/quarkus-rest-example.
-However, this meant I had to go back to Java 11 to get it up & running.
-
-Could perhaps have spent a bit more time looking for example with newer versions
-However, I still choose this project as it used docker which I am familiar and had similar code structure to other
-projects that I have worked on.
-
 # Balance property is not part of DTO
 
 Reason for this is that balance should only be manipulated through transfers & deposits.
