@@ -59,6 +59,11 @@ This activates debug on port `5005`. Then use your IDE to connect to `localhost:
 
 # Some relevant Design Decisions
 
+### Based code on external project
+
+For a quicker start I based my code on https://github.com/kasramp/quarkus-rest-example since I have not worked with
+quarkus before.
+
 ### Architecture: Controller - Service - Repository
 
 The Architecture I went with was a simple Controller - Service - Repository (CSR) pattern. Where:
