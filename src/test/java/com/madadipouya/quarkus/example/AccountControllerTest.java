@@ -5,6 +5,7 @@ import com.madadipouya.quarkus.example.entities.Account;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -46,7 +47,7 @@ public class AccountControllerTest {
                 .when()
                 .post("/v1/accounts")
                 .then()
-                .statusCode(201)
+                .statusCode(HttpStatus.SC_CREATED)
                 .extract()
                 .response();
 
@@ -65,7 +66,7 @@ public class AccountControllerTest {
                 .auth().basic(adminUserName, adminPassword)
                 .when().get("/v1/accounts")
                 .then()
-                .statusCode(200);
+                .statusCode(HttpStatus.SC_OK);
     }
 
     @Test
@@ -74,7 +75,7 @@ public class AccountControllerTest {
                 .auth().basic(adminUserName, adminPassword)
                 .when().get("/v1/accounts/{id}", testAccount.getId())
                 .then()
-                .statusCode(200)
+                .statusCode(HttpStatus.SC_OK)
                 .extract()
                 .response();
 
@@ -93,7 +94,7 @@ public class AccountControllerTest {
                 .auth().basic(adminUserName, adminPassword)
                 .when().get("/v1/accounts/{id}", unknownId)
                 .then()
-                .statusCode(404);
+                .statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
 
@@ -107,7 +108,7 @@ public class AccountControllerTest {
                 .when()
                 .put("/v1/accounts/{id}", testAccount.getId())
                 .then()
-                .statusCode(200)
+                .statusCode(HttpStatus.SC_OK)
                 .extract()
                 .response();
 
@@ -133,7 +134,7 @@ public class AccountControllerTest {
                 .when()
                 .put("/v1/accounts/{id}", unknownId)
                 .then()
-                .statusCode(404);
+                .statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
     @Test
@@ -142,7 +143,7 @@ public class AccountControllerTest {
                 .auth().basic(adminUserName, adminPassword)
                 .when().delete("/v1/accounts/{id}", testAccount.getId())
                 .then()
-                .statusCode(204);
+                .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 
     @Test
@@ -153,7 +154,36 @@ public class AccountControllerTest {
                 .auth().basic(adminUserName, adminPassword)
                 .when().delete("/v1/accounts/{id}", unknownId)
                 .then()
-                .statusCode(404);
+                .statusCode(HttpStatus.SC_NOT_FOUND);
+    }
+
+    @Test
+    public void testDepositMoney() {
+        Response response = given()
+                .auth().basic(adminUserName, adminPassword)
+                .contentType(ContentType.JSON)
+                .body(50)
+                .when()
+                .post("/v1/accounts/{id}/deposit", testAccount.getId())
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .extract()
+                .response();
+
+        Account account = response.as(Account.class);
+        assertThat(account.getBalanceInDkk(), equalTo(50));
+    }
+
+    @Test
+    public void testDepositMoney_Negative_Amount() {
+        given()
+                .auth().basic(adminUserName, adminPassword)
+                .contentType(ContentType.JSON)
+                .body(-1)
+                .when()
+                .post("/v1/accounts/{id}/deposit", testAccount.getId())
+                .then()
+                .statusCode(HttpStatus.SC_BAD_REQUEST);
     }
 
 
@@ -166,7 +196,7 @@ public class AccountControllerTest {
                 .when()
                 .post("/v1/accounts")
                 .then()
-                .statusCode(201)
+                .statusCode(HttpStatus.SC_CREATED)
                 .extract()
                 .as(Account.class);
     }

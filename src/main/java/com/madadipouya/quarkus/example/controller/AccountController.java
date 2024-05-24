@@ -120,7 +120,8 @@ public class AccountController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionHandler.ErrorResponseBody.class)))
     })
     public Response depositMoney(@PathParam("id") Long id, int amount) throws ResourceNotFoundException, ValidationException {
-        return Response.ok(accountService.deposit(id, amount)).build();
+        Account updatedAccount = accountService.deposit(id, amount);
+        return Response.ok(updatedAccount).build();
     }
 
 
