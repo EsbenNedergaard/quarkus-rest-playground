@@ -6,10 +6,10 @@ import com.esben.kaa.quarkus.example.exception.ResourceNotFoundException;
 import com.esben.kaa.quarkus.example.exception.ValidationException;
 import com.esben.kaa.quarkus.example.repository.AccountRepository;
 import com.esben.kaa.quarkus.example.service.AccountService;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
 import java.util.List;
 
 @ApplicationScoped

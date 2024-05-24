@@ -1,14 +1,13 @@
 package com.esben.kaa.quarkus.example.dtos;
 
 import com.esben.kaa.quarkus.example.entities.Account;
+import com.mysql.cj.util.StringUtils;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-
-import javax.validation.constraints.NotBlank;
 
 @Schema(name = "AccountDTO", description = "Account DTO object")
 @Getter
@@ -40,7 +39,7 @@ public class AccountDto {
         Account account = new Account();
         account.setUsername(username);
         account.setPassword(password);
-        account.setRole(StringUtils.isBlank(role) ? "USER" : StringUtils.upperCase(role));
+        account.setRole(StringUtils.isEmptyOrWhitespaceOnly(role) ? "USER" : role);
         account.setFirstName(firstName);
         account.setLastName(lastName);
         return account;

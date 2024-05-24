@@ -7,6 +7,13 @@ import com.esben.kaa.quarkus.example.exception.ResourceNotFoundException;
 import com.esben.kaa.quarkus.example.exception.ValidationException;
 import com.esben.kaa.quarkus.example.exceptionhandler.ExceptionHandler;
 import com.esben.kaa.quarkus.example.service.AccountService;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.validation.Valid;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -15,15 +22,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityScheme;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
-import javax.annotation.security.RolesAllowed;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.validation.Valid;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.List;
 
 @RequestScoped
@@ -60,8 +59,8 @@ public class AccountController {
             @APIResponse(responseCode = "404", description = "Account not found",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionHandler.ErrorResponseBody.class)))
     })
-    public Account getAccount(@PathParam("id") int id) throws ResourceNotFoundException {
-        return accountService.getAccountById(id);
+    public Response getAccount(@PathParam("id") int id) throws ResourceNotFoundException {
+        return Response.ok(accountService.getAccountById(id)).build();
     }
 
     @POST
