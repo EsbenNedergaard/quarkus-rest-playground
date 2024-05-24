@@ -1,7 +1,8 @@
 package com.esben.kaa.quarkus.example.controller;
 
 import com.esben.kaa.quarkus.example.clients.ExchangeRateClient;
-import com.esben.kaa.quarkus.example.entities.Account;
+import com.esben.kaa.quarkus.example.models.ExchangeRateModel;
+import com.esben.kaa.quarkus.example.responses.ExchangeRateResponse;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -34,9 +35,15 @@ public class ExchangeRateController {
     @Produces(MediaType.APPLICATION_JSON)
     @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "Success",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class)))})
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExchangeRateModel.class)))})
     public Response getDkkToUsdRate(@Parameter(description = "API key for accessing the exchange rate service", required = true)
                                     @QueryParam("apiKey") String apiKey) {
-        return Response.ok(exchangeRateClient.getExchangeRate(apiKey, "DKK", "USD")).build();
+        ExchangeRateResponse clientExchangeRate = exchangeRateClient.getExchangeRate(apiKey, "DKK", "USD");
+
+        ExchangeRateModel exchangeRateModel = new ExchangeRateModel();
+        int baseNo = 100;
+        exchangeRateModel.setDKK(baseNo);
+        exchangeRateModel.setUSD(clientExchangeRate.getConversion_rate() * baseNo);
+        return Response.ok(exchangeRateModel).build();
     }
 }
