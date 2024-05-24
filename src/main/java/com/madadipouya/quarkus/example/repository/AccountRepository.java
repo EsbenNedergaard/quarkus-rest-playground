@@ -1,6 +1,6 @@
 package com.madadipouya.quarkus.example.repository;
 
-import com.madadipouya.quarkus.example.models.Account;
+import com.madadipouya.quarkus.example.entities.Account;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 
 import javax.enterprise.context.ApplicationScoped;

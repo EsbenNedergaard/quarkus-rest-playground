@@ -1,12 +1,12 @@
 package com.madadipouya.quarkus.example.controller;
 
+import com.madadipouya.quarkus.example.dtos.AccountDto;
+import com.madadipouya.quarkus.example.dtos.TransferRequestDto;
+import com.madadipouya.quarkus.example.entities.Account;
 import com.madadipouya.quarkus.example.exception.ResourceNotFoundException;
+import com.madadipouya.quarkus.example.exception.ValidationException;
 import com.madadipouya.quarkus.example.exceptionhandler.ExceptionHandler;
-import com.madadipouya.quarkus.example.models.Account;
 import com.madadipouya.quarkus.example.service.AccountService;
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -21,7 +21,6 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -66,12 +65,13 @@ public class AccountController {
     }
 
     @POST
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({"ADMIN"})
     @Operation(summary = "Creates an account", description = "Creates an account and persists into database")
-    @APIResponses(value = @APIResponse(responseCode = "200", description = "Success",
+    @APIResponses(value = @APIResponse(responseCode = "201", description = "Created",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))))
-    public Account createAccount(@Valid AccountController.AccountDto accountDto) {
-        return accountService.createNewAccount(accountDto.toAccount());
+    public Response createAccount(@Valid AccountDto accountDto) {
+        Account newAccount = accountService.createNewAccount(accountDto.toAccount());
+        return Response.status(Response.Status.CREATED).entity(newAccount).build();
     }
 
     @PUT
@@ -84,8 +84,9 @@ public class AccountController {
             @APIResponse(responseCode = "404", description = "Account not found",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionHandler.ErrorResponseBody.class)))
     })
-    public Account updateAccount(@PathParam("id") int id, @Valid AccountController.AccountDto accountDto) throws ResourceNotFoundException {
-        return accountService.updateAccount(id, accountDto.toAccount());
+    public Response updateAccount(@PathParam("id") int id, @Valid AccountDto accountDto) throws ResourceNotFoundException {
+        Account updatedAccount = accountService.updateAccount(id, accountDto.toAccount());
+        return Response.ok(updatedAccount).build();
     }
 
     @DELETE
@@ -102,38 +103,36 @@ public class AccountController {
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
-    @Schema(name = "AccountDTO", description = "Account representation to create")
-    @Getter
-    @Setter
-    public static class AccountDto {
+    @POST
+    @RolesAllowed({"USER", "ADMIN"})
+    @Path("/{id}/deposit")
+    @Operation(summary = "Deposits money on an account", description = "Deposits the provided amount on the given account")
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Success",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))),
+            @APIResponse(responseCode = "404", description = "Account not found",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionHandler.ErrorResponseBody.class))),
+            @APIResponse(responseCode = "400", description = "Bad request",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionHandler.ErrorResponseBody.class)))
+    })
+    public Response depositMoney(@PathParam("id") Long id, int amount) throws ResourceNotFoundException, ValidationException {
+        Account updatedAccount = accountService.deposit(id, amount);
+        return Response.ok(updatedAccount).build();
+    }
 
-        @NotBlank
-        @Schema(title = "Username", required = true)
-        private String username;
-
-        @NotBlank
-        @Schema(title = "Password", required = true)
-        private String password;
-
-        @Schema(title = "User role, either ADMIN or USER. USER is default")
-        private String role;
-
-        @NotBlank
-        @Schema(title = "User first name", required = true)
-        private String firstName;
-
-        @NotBlank
-        @Schema(title = "User lastname", required = true)
-        private String lastName;
-
-        public Account toAccount() {
-            Account account = new Account();
-            account.setUsername(username);
-            account.setPassword(password);
-            account.setRole(StringUtils.isBlank(role) ? "USER" : StringUtils.upperCase(role));
-            account.setFirstName(firstName);
-            account.setLastName(lastName);
-            return account;
-        }
+    @POST
+    @RolesAllowed({"USER", "ADMIN"})
+    @Path("/transfer")
+    @Operation(summary = "Deposits money on an account", description = "Deposits the provided amount on the given account")
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Success"),
+            @APIResponse(responseCode = "404", description = "Account not found",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionHandler.ErrorResponseBody.class))),
+            @APIResponse(responseCode = "400", description = "Bad request",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionHandler.ErrorResponseBody.class)))
+    })
+    public Response transferMoney(TransferRequestDto transferRequest) throws ResourceNotFoundException, ValidationException {
+        this.accountService.transferMoney(transferRequest);
+        return Response.ok().build();
     }
 }

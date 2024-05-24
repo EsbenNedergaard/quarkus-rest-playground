@@ -2,7 +2,7 @@
 
 This project uses Quarkus to build REST APIs.
 
-Note I tested this project using Java 11
+Note I tested this project using Java 11 (so remember to change your JAVA_HOME to use java 11)
 
 ## Running the application in `dev` mode
 
@@ -95,3 +95,12 @@ projects that I have worked on.
 # Balance property is not part of DTO
 
 Reason for this is that balance should only be manipulated through transfers & deposits.
+
+# Using POST instead of PUT for the deposit/transfer methods
+
+We use POST instead of PUT as this is only a partial update and not a FULL-UPDATE of the resource.
+
+# Mockito should be used for better/cleaner testing
+
+Decided not to bother using mocking framework such as Mockito due to it taking some time to get up and running.
+So creating test data through calls to REST ATM which is not ideal.
