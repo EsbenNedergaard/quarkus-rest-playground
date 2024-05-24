@@ -30,6 +30,7 @@ public class AccountControllerTest {
     public void testCreateAccountEndpoint() {
         AccountController.AccountDto dto = new AccountController.AccountDto("userName", "password", "ADMIN", "firstName", "lastName");
         given()
+                .auth().basic(adminUserName, adminPassword)
                 .body(dto)
                 .contentType(ContentType.JSON)
                 .when()
@@ -41,6 +42,7 @@ public class AccountControllerTest {
     @Test
     public void testListAccountsEndpoint() {
         given()
+                .auth().basic(adminUserName, adminPassword)
                 .when().get("/v1/accounts")
                 .then()
                 .statusCode(200);
@@ -49,6 +51,7 @@ public class AccountControllerTest {
     @Test
     public void testGetAccountByIdEndpoint() {
         given()
+                .auth().basic(adminUserName, adminPassword)
                 .when().get("/v1/accounts/{id}", testAccount.getId())
                 .then()
                 .statusCode(200);
@@ -83,6 +86,7 @@ public class AccountControllerTest {
     private static Account createAccount(String username, String password, String role) {
         AccountController.AccountDto dto = new AccountController.AccountDto(username, password, role, "firstName", "lastName");
         return given()
+                .auth().basic(adminUserName, adminPassword)
                 .body(dto)
                 .contentType(ContentType.JSON)
                 .when()
