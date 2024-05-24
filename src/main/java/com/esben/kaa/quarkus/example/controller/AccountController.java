@@ -43,7 +43,7 @@ public class AccountController {
 
     @GET
     @RolesAllowed({"USER", "ADMIN"})
-    @Operation(summary = "Gets accounts", description = "Lists all available accounts")
+    @Operation(summary = "Gets list of accounts", description = "Lists all available accounts")
     @APIResponses(value = @APIResponse(responseCode = "200", description = "Success",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))))
     public List<Account> getAccounts() {
