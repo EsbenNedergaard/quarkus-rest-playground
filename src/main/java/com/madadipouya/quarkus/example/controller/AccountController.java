@@ -21,8 +21,6 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -50,7 +48,7 @@ public class AccountController {
     @APIResponses(value = @APIResponse(responseCode = "200", description = "Success",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))))
     public List<Account> getAccounts() {
-        return accountService.getAllUsers();
+        return accountService.getAllAccounts();
     }
 
     @GET
@@ -73,7 +71,7 @@ public class AccountController {
     @APIResponses(value = @APIResponse(responseCode = "200", description = "Success",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))))
     public Account createAccount(@Valid AccountController.AccountDto accountDto) {
-        return accountService.saveAccount(accountDto.toAccount());
+        return accountService.createNewAccount(accountDto.toAccount());
     }
 
     @PUT
@@ -121,17 +119,12 @@ public class AccountController {
         private String role;
 
         @NotBlank
-        @Schema(title = "User given name", required = true)
+        @Schema(title = "User first name", required = true)
         private String firstName;
 
         @NotBlank
-        @Schema(title = "User surname", required = true)
+        @Schema(title = "User lastname", required = true)
         private String lastName;
-
-        @Min(value = 1, message = "The value must be more than 0")
-        @Max(value = 200, message = "The value must be less than 200")
-        @Schema(title = "User age between 1 to 200", required = true)
-        private int age;
 
         public Account toAccount() {
             Account account = new Account();
@@ -140,7 +133,6 @@ public class AccountController {
             account.setRole(StringUtils.isBlank(role) ? "USER" : StringUtils.upperCase(role));
             account.setFirstName(firstName);
             account.setLastName(lastName);
-            account.setAge(age);
             return account;
         }
     }

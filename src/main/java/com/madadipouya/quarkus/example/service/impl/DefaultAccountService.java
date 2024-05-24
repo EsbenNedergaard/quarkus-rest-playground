@@ -1,8 +1,8 @@
 package com.madadipouya.quarkus.example.service.impl;
 
-import com.madadipouya.quarkus.example.models.Account;
 import com.madadipouya.quarkus.example.exception.ResourceNotFoundException;
-import com.madadipouya.quarkus.example.repository.UserRepository;
+import com.madadipouya.quarkus.example.models.Account;
+import com.madadipouya.quarkus.example.repository.AccountRepository;
 import com.madadipouya.quarkus.example.service.AccountService;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -13,21 +13,21 @@ import java.util.List;
 @ApplicationScoped
 public class DefaultAccountService implements AccountService {
 
-    private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
 
     @Inject
-    public DefaultAccountService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public DefaultAccountService(AccountRepository accountRepository) {
+        this.accountRepository = accountRepository;
     }
 
     @Override
     public Account getAccountById(long id) throws ResourceNotFoundException {
-        return userRepository.findByIdOptional(id).orElseThrow(() -> new ResourceNotFoundException("There user doesn't exist"));
+        return accountRepository.findByIdOptional(id).orElseThrow(() -> new ResourceNotFoundException("The resource does not exist"));
     }
 
     @Override
-    public List<Account> getAllUsers() {
-        return userRepository.listAll();
+    public List<Account> getAllAccounts() {
+        return accountRepository.listAll();
     }
 
     @Transactional
@@ -36,21 +36,21 @@ public class DefaultAccountService implements AccountService {
         Account existingAccount = getAccountById(id);
         existingAccount.setFirstName(account.getFirstName());
         existingAccount.setLastName(account.getLastName());
-        existingAccount.setAge(account.getAge());
-        userRepository.persist(existingAccount);
+        accountRepository.persist(existingAccount);
         return existingAccount;
     }
 
     @Transactional
     @Override
-    public Account saveAccount(Account account) {
-        userRepository.persistAndFlush(account);
+    public Account createNewAccount(Account account) {
+        account.setBalanceInDkk(0);
+        accountRepository.persistAndFlush(account);
         return account;
     }
 
     @Transactional
     @Override
     public void deleteAccount(long id) throws ResourceNotFoundException {
-        userRepository.delete(getAccountById(id));
+        accountRepository.delete(getAccountById(id));
     }
 }

@@ -9,13 +9,12 @@ import lombok.Setter;
 
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "users") // TODO: replace
+@Table(name = "accounts") // TODO: replace
 @UserDefinition
 @Getter
 @Setter
@@ -48,8 +47,7 @@ public class Account {
     @Size(max = 256)
     private String lastName;
 
-    @Column(name = "age", nullable = false)
-    @Min(1)
-    @Max(200)
-    private int age;
+    @Column(name = "balance_in_dkk", nullable = false)
+    @Min(0)
+    private int balanceInDkk;
 }
