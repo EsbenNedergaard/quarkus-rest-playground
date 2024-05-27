@@ -44,7 +44,7 @@ curl -X GET "localhost:8080/v1/accounts" -H "accept: application/json" -u leo:12
 curl -X POST "localhost:8080/v1/accounts" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"firstName\":\"Tom\",\"lastName\":\"Cruise\",\"password\":\"password\",\"role\":\"USER\",\"username\":\"tomC\"}" -u admin:admin
 
 # deposit money on an account 
-curl -X POST "localhost:8080/v1/accounts/1/deposit" -H "accept: application/json" -H "Content-Type: application/json" -d "1" -u leo:1234
+curl -X POST "localhost:8080/v1/accounts/1/deposit?amount=200" -H "accept: application/json" -H "Content-Type: application/json" -u leo:1234
 ```
 
 ## Debugging the application
