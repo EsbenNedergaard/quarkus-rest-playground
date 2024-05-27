@@ -46,6 +46,9 @@ curl -X POST "localhost:8080/v1/accounts" -H "accept: application/json" -H "Cont
 # deposit money on an account 
 curl -X POST "localhost:8080/v1/accounts/1/deposit?amount=200" -H "accept: application/json" -H "Content-Type: application/json" -u leo:1234
 
+# Transfer illegal amount of money
+curl -X POST "localhost:8080/v1/accounts/transfer" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"sourceAccountId\": 1, \"destinationAccountId\": 3, \"amount\": -10}" -u admin:admin
+
 # Exchange rate for DKK to USD
 curl -X GET "localhost:8080/v1/exchange-rate/dkk-usd?apiKey=<your_key>" -H "accept: application/json"
 ```
